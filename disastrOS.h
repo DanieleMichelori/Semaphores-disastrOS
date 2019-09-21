@@ -38,3 +38,9 @@ int disastrOS_destroyResource(int resource_id);
 
 // debug function, prints the state of the internal system
 void disastrOS_printStatus();
+
+//Risolve i warning: implicit declaration of function ‘disastrOS_sem...’ [-Wimplicit-function-declaration]
+int disastrOS_semOpen(int sem_id, int sem_count);
+int disastrOS_semClose(int sem_count);
+int disastrOS_semPost(int sem_id);
+int disastrOS_semWait(int sem_id);

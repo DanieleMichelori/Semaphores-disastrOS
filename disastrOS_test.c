@@ -4,6 +4,44 @@
 
 #include "disastrOS.h"
 
+#define BUFFER_LENGTH 30
+#define ITERATION 10
+
+#define PRODUCER_ID 1
+#define CONSUMER_ID 2
+#define WRITE_ID 3
+#define READ_ID 4
+
+int buffer[BUFFER_LENGTH];
+int write_index = 0;
+int read_index = 0;
+int cnt = 1;
+
+void producer_function(int filled_sem, int empty_sem, int read_sem, int write_sem) { //enqueue
+  disastrOS_semWait(empty_sem);
+  disastrOS_semWait(write_sem);
+
+  printf("[SCRITTURA] Scrivo nel buffer alla cella %d: il valore: %d\n", cnt, write_index);
+	buffer[write_index] = cnt;
+	write_index = (write_index + 1) % BUFFER_LENGTH;
+	cnt++;
+
+  disastrOS_semPost(write_sem);
+  disastrOS_semPost(filled_sem);
+}
+
+void consumer_function(int filled_sem, int empty_sem, int read_sem, int write_sem) {  //dequeue
+  disastrOS_semWait(filled_sem);
+  disastrOS_semWait(read_sem);
+
+  int x = buffer[read_index];
+  printf("[LETTURA] Leggo nel buffer alla cella %d: il valore: %d\n", x, read_index);
+	read_index = (read_index + 1) % BUFFER_LENGTH;
+
+  disastrOS_semPost(read_sem);
+  disastrOS_semPost(empty_sem);
+}
+
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
   printf("Hello, I am the sleeper, and I sleep %d\n",disastrOS_getpid());
@@ -22,10 +60,26 @@ void childFunction(void* args){
   printf("fd=%d\n", fd);
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
-  for (int i=0; i<(disastrOS_getpid()+1); ++i){
-    printf("PID: %d, iterate %d\n", disastrOS_getpid(), i);
-    disastrOS_sleep((20-disastrOS_getpid())*5);
+  printf("Apertura e inizializzazione semafori...\n");
+  //necessari per il modello produttore - consumatore
+  int filled_sem = disastrOS_semOpen(CONSUMER_ID, 0);
+  int empty_sem = disastrOS_semOpen(PRODUCER_ID, BUFFER_LENGTH);
+  int read_sem = disastrOS_semOpen(READ_ID, 1);
+  int write_sem = disastrOS_semOpen(WRITE_ID, 1);
+
+  for (int i=0; i<ITERATION; ++i){
+    if(disastrOS_getpid()%2==0) {  //Se il pid del figlio è pari allora viene eseguita un'operazione di scrittura nel buffer
+      producer_function(filled_sem, empty_sem, read_sem, write_sem);
+    }
+    //Se il pid del figlio è dispari allora viene eseguita un'operazione di lettura sul buffer
+    else consumer_function(filled_sem, empty_sem, read_sem, write_sem);
   }
+
+  printf("Chiusura semafori...\n");
+  disastrOS_semClose(empty_sem);
+  disastrOS_semClose(filled_sem);
+  disastrOS_semClose(read_sem);
+  disastrOS_semClose(write_sem);
   disastrOS_exit(disastrOS_getpid()+1);
 }
 
@@ -34,7 +88,7 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   printf("hello, I am init and I just started\n");
   disastrOS_spawn(sleeperFunction, 0);
-  
+
 
   printf("I feel like to spawn 10 nice threads\n");
   int alive_children=0;
@@ -52,7 +106,7 @@ void initFunction(void* args) {
   disastrOS_printStatus();
   int retval;
   int pid;
-  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){ 
+  while(alive_children>0 && (pid=disastrOS_wait(0, &retval))>=0){
     disastrOS_printStatus();
     printf("initFunction, child: %d terminated, retval:%d, alive: %d \n",
 	   pid, retval, alive_children);
