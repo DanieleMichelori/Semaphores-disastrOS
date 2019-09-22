@@ -15,7 +15,7 @@
 int buffer[BUFFER_LENGTH];
 int write_index = 0;
 int read_index = 0;
-int cnt = 1;
+int cnt = 0;
 
 void producer_function(int filled_sem, int empty_sem, int read_sem, int write_sem) { //enqueue
   disastrOS_semWait(empty_sem);
@@ -112,7 +112,7 @@ void initFunction(void* args) {
 	   pid, retval, alive_children);
     --alive_children;
   }
-  printf("shutdown!");
+  printf("shutdown!\n");
   disastrOS_shutdown();
 }
 

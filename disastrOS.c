@@ -148,6 +148,10 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
   Descriptor_init();
   init_pcb=0;
 
+  //Risolve il problema di segmentazione nato dall'allocazione sia dei semafori sia dei descittori (core dump creato)
+  Semaphore_init();  //Inizializzazione Semaphore
+  SemDescriptor_init();  //Inizializzazione fd
+
   // populate the vector of syscalls and number of arguments for each syscall
   for (int i=0; i<DSOS_MAX_SYSCALLS; ++i){
     syscall_vector[i]=0;
