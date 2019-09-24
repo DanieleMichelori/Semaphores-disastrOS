@@ -58,7 +58,7 @@ void childFunction(void* args){
   int mode=0;
   int fd=disastrOS_openResource(disastrOS_getpid(),type,mode);
   printf("fd=%d\n", fd);
-  printf("PID: %d, terminating\n", disastrOS_getpid());
+  printf("PID: %d, terminating\n\n", disastrOS_getpid());
 
   printf("Apertura e inizializzazione semafori...\n");
   //necessari per il modello produttore - consumatore

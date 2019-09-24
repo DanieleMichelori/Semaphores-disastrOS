@@ -24,7 +24,7 @@ void internal_semOpen(){
   }
 
   int fd = running->last_sem_fd;  //assegnazione del descrittore all'ultimo semaforo creato
-  printf("Creazione del descriptor: %d per il semaforo con id: %d\n", fd, sem_id);
+  printf("Creazione del descriptor: %d per il semaforo con id: %d\n\n", fd, sem_id);
   //SemDescriptor* SemDescriptor_alloc(int fd, Semaphore* res, PCB* pcb);
   SemDescriptor* fd_sem = SemDescriptor_alloc(fd, sem_aux, running);  //alloco il descrittore al semaforo appena creato: sem_aux
   running->last_sem_fd ++;  //incremento il file descriptor del processo running in esecuzione
