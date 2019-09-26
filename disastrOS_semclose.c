@@ -29,7 +29,7 @@ void internal_semClose(){
     return;
   }
 
-  SemDescriptor* ret0 = SemDescriptor_free(fd_sem);  //dealloco la memoria occupata dal descriptor: fd
+  int ret0 = SemDescriptor_free(fd_sem);  //dealloco la memoria occupata dal descriptor: fd
 
   //Success == 0 in PoolAllocator_releaseBlock associata a: SemDescriptor_free
   if(ret0 != 0) {  //caso in cui la deallocazione del descrittore fallisce
@@ -49,7 +49,7 @@ void internal_semClose(){
     return;
   }
 
-  SemDescriptorPtr* ret1 = SemDescriptorPtr_free(fd_semPtr);  //dealloco la memoria occupata dal puntatore a descrittore
+  int ret1 = SemDescriptorPtr_free(fd_semPtr);  //dealloco la memoria occupata dal puntatore a descrittore
 
   //Success == 0 in PoolAllocator_releaseBlock associata a: SemDescriptorPtr_free
   if(ret1 != 0) {  //caso in cui la deallocazione del descrittore fallisce
@@ -70,7 +70,7 @@ void internal_semClose(){
       return;
     }
 
-    Semaphore* ret3 = Semaphore_free(sem);  //dealloco la memoria occupata dal semaforo
+    int ret3 = Semaphore_free(sem);  //dealloco la memoria occupata dal semaforo
 
     //Success == 0 in PoolAllocator_releaseBlock associata a: Semaphore_free
     if(ret3 != 0) {  //caso in cui la deallocazione del descrittore fallisce
