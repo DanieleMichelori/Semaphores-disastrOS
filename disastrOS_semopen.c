@@ -6,6 +6,7 @@
 #include "disastrOS_semaphore.h"
 #include "disastrOS_semdescriptor.h"
 #include "disastrOS_globals.h"
+#include "disastrOS_constants.h"
 
 void internal_semOpen(){
   // do stuff :)

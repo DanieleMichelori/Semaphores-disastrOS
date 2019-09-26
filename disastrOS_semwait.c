@@ -17,7 +17,7 @@ void internal_semWait(){
   sem->count = sem->count - 1;  //decremento contatore Semaphore associato alla Wait
   SemDescriptorPtr* fd_semPtr = fd_sem->ptr;
 
-  printf("Sposto il puntatore a descrittore nella lista di Waiting...\n");
+  //printf("Sposto il puntatore a descrittore nella lista di Waiting...\n");
   if(sem->count < 0) {  //il contatore del semaforo ha valore negativo -> sospendo il task
     /*
     SemDescriptorPtr* ret = List_detach(&sem->descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore dalla lista dei descittori del semaforo

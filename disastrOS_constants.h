@@ -43,6 +43,8 @@
 #define DSOS_ESEM_FDES_FREE -21
 #define DSOS_ESEM_FDES_PTR_FREE -22
 
+#define DSOS_ESEM_FDES_RWRONG -23
+
 // syscall numbers
 #define DSOS_MAX_SYSCALLS 32
 #define DSOS_MAX_SYSCALLS_ARGS 8

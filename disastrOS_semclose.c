@@ -5,6 +5,7 @@
 #include "disastrOS_syscalls.h"
 #include "disastrOS_semaphore.h"
 #include "disastrOS_semdescriptor.h"
+#include "disastrOS_constants.h"
 
 void internal_semClose(){
   // do stuff :)
@@ -15,6 +16,7 @@ void internal_semClose(){
 
   if(!fd_sem) {  //caso in cui il descittore fd non è presente nella lista dei descrittori del semaforo
     printf("[ERROR]: il file descriptor cercato: %d non è presente\n", fd);
+    running->syscall_retvalue = DSOS_ESEM_FDES_RWRONG;
     return;
   }
   printf("Il file descriptor cercato: %d esiste!\n", fd);
@@ -60,7 +62,7 @@ void internal_semClose(){
 
   running->last_sem_fd--;  //decremento il contatore dei descrittori attivi del processo
 
-  if(sem->descriptors.size == 0) {  //controllo che non ci siano descrittori attivi nel semaforo: sem
+  if(sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {  //controllo che non ci siano descrittori attivi e in attesa nel semaforo: sem
     printf("Rimozione del semaforo con id: %d...\n\n", sem->id);
     Semaphore* ret2 = (Semaphore*)List_detach(&semaphores_list, (ListItem *)sem);  //rimuovo il semaforo dalla lista dei semafori
 
@@ -79,4 +81,6 @@ void internal_semClose(){
       return;
     }
   }
+
+  running->syscall_retvalue = 0;  //setto il valore di ritorno
 }
