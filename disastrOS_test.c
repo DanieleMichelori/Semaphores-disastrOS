@@ -21,7 +21,7 @@ void producer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   disastrOS_semWait(empty_sem);
   disastrOS_semWait(write_sem);
 
-  printf("[SCRITTURA] Scrivo nel buffer alla cella %d: il valore: %d\n", cnt, write_index);
+  printf("[WRITE] Scrivo nel buffer alla cella %d: il valore: %d\n", cnt, write_index);
 	buffer[write_index] = cnt;
 	write_index = (write_index + 1) % BUFFER_LENGTH;
 	cnt++;
@@ -35,7 +35,7 @@ void consumer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   disastrOS_semWait(read_sem);
 
   int x = buffer[read_index];
-  printf("[LETTURA] Leggo nel buffer alla cella %d: il valore: %d\n", x, read_index);
+  printf("[READ] Leggo nel buffer alla cella %d: il valore: %d\n", x, read_index);
 	read_index = (read_index + 1) % BUFFER_LENGTH;
 
   disastrOS_semPost(read_sem);

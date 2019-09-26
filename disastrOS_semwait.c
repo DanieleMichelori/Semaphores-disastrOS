@@ -19,8 +19,10 @@ void internal_semWait(){
 
   printf("Sposto il puntatore a descrittore nella lista di Waiting...\n");
   if(sem->count < 0) {  //il contatore del semaforo ha valore negativo -> sospendo il task
+    /*
     SemDescriptorPtr* ret = List_detach(&sem->descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore dalla lista dei descittori del semaforo
     ret = List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *) fd_semPtr);  //inserisco il puntatore a descrittore nella lista di waiting del semaforo
+    */
   }
 
 
