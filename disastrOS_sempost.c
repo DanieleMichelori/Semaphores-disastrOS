@@ -25,8 +25,8 @@ void internal_semPost(){
 
   SemDescriptorPtr* fd_semPtr = fd_sem->ptr;  //risalgo al puntatore a descittore
 
-  //Sposto il puntatore a descrittore nella lista di Waiting
-  if(sem->count <= 0) {  //il contatore del semaforo ha valore negativo -> sospendo il task
+  //Sposto il puntatore a descrittore dalla lista di Waiting
+  if(sem->count >= 0) {  //il contatore del semaforo ha valore positivo -> riprendo il task
     SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->waiting_descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla waiting_list del semaforo
 
     if(!ret0) {  //caso in cui la rimozione del puntatore a descrittore, dalla waiting list, fallisce
