@@ -25,9 +25,9 @@ void internal_semWait(){
 
   SemDescriptorPtr* fd_semPtr = fd_sem->ptr;  //risalgo al puntatore a descittore
 
-  //printf("Sposto il puntatore a descrittore nella lista di Waiting...\n");
+  //Sposto il puntatore a descrittore nella lista di Waiting
   if(sem->count < 0) {  //il contatore del semaforo ha valore negativo -> sospendo il task
-    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore dalla lista dei descittori del semaforo
+    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla lista dei descittori del semaforo
 
     if(!ret0) {  //caso in cui la rimozione del puntatore a descrittore, dalla lista, fallisce
       printf("[ERROR]: rimozione del puntatore a descrittore fallita!\n");
@@ -35,7 +35,7 @@ void internal_semWait(){
       return;
     }
 
-    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *) fd_semPtr);  //inserisco il puntatore a descrittore nella lista di waiting del semaforo
+    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *) fd_semPtr);  //inserisco il puntatore a descrittore: fd_semPtr nella lista di waiting del semaforo
 
     if(!ret1) {  //caso in cui l'inserimento del puntatore a descrittore, nella lista di waiting, fallisce
       printf("[ERROR]: inserimento del puntatore a descrittore, nella waiting_list, fallita!\n");
