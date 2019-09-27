@@ -1,0 +1,22 @@
+Semaphores-disastrOS
+- WHAT:
+
+
+
+
+- HOW:
+1. semOpen: Systemcall necessaria alla creazione del semaforo 'sem_aux' caratterizzato dal parametro 'sem_id' rappresentante l'id e dal parametro 'sem_count' rappresentante il contatore.
+Dopo aver verificato che l'id passato sia idoneo ovvero non negativo, nel caso in cui il semaforo non sia preesistente, si procede alla sua allocazione tramite la 'Semaphore_alloc'; altrimenti si procede all'apertura di un nuovo descrittore mediante la 'SemDescriptor_alloc'.	
+Tramite la 'SemDescriptorPtr_alloc', la semOpen, crea inoltre un puntatore a descrittore e incrementa il contatore dei descrittori attivi del processo in esecuzione.
+
+
+2. semClose:  
+
+3. semWait: 
+
+4. semPost: 
+
+
+
+- HOW TO RUN:
+Per eseguire il test è necessario compilare tutti i files mediante il comando da terminale 'make' e quindi eseguire il file di prova con './disastrOS_test'.
