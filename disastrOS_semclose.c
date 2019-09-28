@@ -62,7 +62,7 @@ void internal_semClose(){
 
   running->last_sem_fd--;  //decremento il contatore dei descrittori attivi del processo
 
-  if(sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {  //controllo che non ci siano descrittori attivi e in attesa nel semaforo: sem
+  if(sem->descriptors.size == 0 && sem->waiting_descriptors.size == 0) {  //controllo che non ci siano descrittori attivi e descittori in attesa nel semaforo: sem
     printf("Rimozione del semaforo con ID: %d...\n", sem->id);
     Semaphore* ret2 = (Semaphore*)List_detach(&semaphores_list, (ListItem *)sem);  //rimuovo il semaforo dalla lista dei semafori
 
@@ -81,6 +81,7 @@ void internal_semClose(){
       return;
     }
   }
+  else printf("Non rimuovo il semaforo con ID: %d\n", sem->id);  //caso in cui sono presenti descrittori attivi e/o descrittori in attesa -> NON rimuovo il semaforo
 
   running->syscall_retvalue = 0;  //setto il valore di ritorno
 }

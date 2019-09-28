@@ -10,6 +10,7 @@
 void internal_semPost(){
   // do stuff :)
   int fd = running->syscall_args[0];  //assegnazione file descriptor
+
   //Descriptor*  DescriptorList_byFd(ListHead* l, int fd)
   SemDescriptor* fd_sem = (SemDescriptor*)SemDescriptorList_byFd(&running->sem_descriptors, fd);  //verifico la presenza del descrittore nella lista dei descittori del semaforo
 
@@ -27,7 +28,7 @@ void internal_semPost(){
 
   //Sposto il puntatore a descrittore dalla lista di Waiting
   if(sem->count >= 0) {  //il contatore del semaforo ha valore positivo -> riprendo il task
-    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->waiting_descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla waiting_list del semaforo
+    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->waiting_descriptors, (ListItem *)fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla waiting_list del semaforo
 
     if(!ret0) {  //caso in cui la rimozione del puntatore a descrittore, dalla waiting list, fallisce
       printf("[ERROR]: Rimozione del puntatore a descrittore, dalla waiting_list, fallita!\n");

@@ -10,6 +10,7 @@
 void internal_semWait(){
   // do stuff :)
   int fd = running->syscall_args[0];  //assegnazione file descriptor
+
   //Descriptor*  DescriptorList_byFd(ListHead* l, int fd)
   SemDescriptor* fd_sem = (SemDescriptor*)SemDescriptorList_byFd(&running->sem_descriptors, fd);  //verifico la presenza del descrittore nella lista dei descittori del semaforo
 
@@ -27,7 +28,7 @@ void internal_semWait(){
 
   //Sposto il puntatore a descrittore nella lista di Waiting
   if(sem->count < 0) {  //il contatore del semaforo ha valore negativo -> sospendo il task
-    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->descriptors, (ListItem *) fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla lista dei descittori del semaforo
+    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->descriptors, (ListItem *)fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla lista dei descittori del semaforo
 
     if(!ret0) {  //caso in cui la rimozione del puntatore a descrittore, dalla lista, fallisce
       printf("[ERROR]: Rimozione del puntatore a descrittore fallita!\n");
@@ -35,7 +36,7 @@ void internal_semWait(){
       return;
     }
 
-    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *) fd_semPtr);  //inserisco il puntatore a descrittore: fd_semPtr nella lista di waiting del semaforo
+    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *)fd_semPtr);  //inserisco il puntatore a descrittore: fd_semPtr nella lista di waiting del semaforo
 
     if(!ret1) {  //caso in cui l'inserimento del puntatore a descrittore, nella lista di waiting, fallisce
       printf("[ERROR]: Inserimento del puntatore a descrittore, nella waiting_list, fallita!\n");
@@ -43,11 +44,15 @@ void internal_semWait(){
       return;
     }
 
+    PCB* pcb_aux = (PCB*)List_insert(&waiting_list, waiting_list.last, (ListItem *)running);  //inserisco il protocol control block del processo corrente nella waiting_list
+
+    if(!pcb_aux) {
+      printf("[ERROR]: Inserimento del processo, nella waiting_list, fallita!\n");
+      running->return_value = DSOS_ELIST_INSERT;
+      return;
+    }
 
   }
 
-
-
-
-
+  running->syscall_retvalue = 0;
 }
