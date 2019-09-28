@@ -43,7 +43,6 @@ void internal_semWait(){
       running->syscall_retvalue = DSOS_ELIST_INSERT;
       return;
     }
-
     PCB* pcb_aux = (PCB*)List_insert(&waiting_list, waiting_list.last, (ListItem *)running);  //inserisco il protocol control block del processo corrente nella waiting_list
 
     if(!pcb_aux) {

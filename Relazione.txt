@@ -10,7 +10,9 @@ Dopo aver verificato che l'id passato sia idoneo ovvero non negativo, nel caso i
 Tramite la 'SemDescriptorPtr_alloc', la semOpen, crea inoltre un puntatore a descrittore e incrementa il contatore dei descrittori attivi del processo in esecuzione.
 
 
-2. semClose:  
+2. semClose: Systemcall necessaria alla rimozione del descrittore passato tramite 'List_Detach' e alla successiva deallocazione mediante 'SemDescriptor_free' dalla lista dei descrittori del processo in esecuzione.
+Succesivamente, con funzioni analoghe, viene rimosso e quindi deallocato anche il puntatore a descrittore. Nel caso in cui non risultassero attivi e/o in attesa ulteriori descrittori, la semClose, rimuove e dealloca il semaforo per poi restituire il valore di ritorno 0 (nel caso in cui non ci siano errori).
+
 
 3. semWait: 
 
