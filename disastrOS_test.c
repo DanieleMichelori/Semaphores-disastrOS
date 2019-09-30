@@ -4,7 +4,7 @@
 
 #include "disastrOS.h"
 
-#define BUFFER_LENGTH 30
+#define BUFFER_LENGTH 50
 #define ITERATION 10
 
 #define PRODUCER_ID 1
@@ -26,7 +26,7 @@ void producer_function(int filled_sem, int empty_sem, int read_sem, int write_se
 	write_index = (write_index + 1) % BUFFER_LENGTH;
 	cnt++;
 
-  //disastrOS_sleep(20);
+  disastrOS_sleep(1);
 
   disastrOS_semPost(write_sem);
   disastrOS_semPost(filled_sem);
@@ -40,7 +40,7 @@ void consumer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   printf("\n[READ] Leggo nel buffer alla cella %d il valore %d\n\n", x, read_index);
 	read_index = (read_index + 1) % BUFFER_LENGTH;
 
-  //disastrOS_sleep(20);
+  disastrOS_sleep(1);
 
   disastrOS_semPost(read_sem);
   disastrOS_semPost(empty_sem);
@@ -77,12 +77,6 @@ void childFunction(void* args){
     }
     //Se il pid del figlio è dispari allora viene eseguita un'operazione di lettura sul buffer
     else consumer_function(filled_sem, empty_sem, read_sem, write_sem);
-
-    int i;
-    for(i = 0; i<BUFFER_LENGTH; i++){
-      printf("%d ", buffer[i]);
-    }
-    printf("\n");
   }
 
   printf("\nCHIUSURA SEMAFORI...\n");
@@ -90,6 +84,7 @@ void childFunction(void* args){
   disastrOS_semClose(filled_sem);
   disastrOS_semClose(read_sem);
   disastrOS_semClose(write_sem);
+
   disastrOS_exit(disastrOS_getpid()+1);
 }
 

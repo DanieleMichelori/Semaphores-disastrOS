@@ -24,42 +24,43 @@ void internal_semPost(){
   printf("[POST] Il contatore del semaforo con ID: %d passa dal valore %d al valore %d\n", sem->id, sem->count, sem->count+1);
   sem->count = sem->count + 1;  //decremento contatore Semaphore associato alla Wait
 
-  SemDescriptorPtr* fd_semPtr = fd_sem->ptr;  //risalgo al puntatore a descittore
-
   //Sposto il puntatore a descrittore dalla lista di Waiting
-  if(sem->count >= 0) {  //il contatore del semaforo ha valore positivo -> riprendo il task
-    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_detach(&sem->waiting_descriptors, (ListItem *)fd_semPtr);  //rimuovo il puntatore a descrittore: fd_semPtr dalla waiting_list del semaforo
+  if(sem->count <= 0) {  //verifico che il contatore del semaforo abbia valore negativo
+    SemDescriptorPtr* auxPtr = (SemDescriptorPtr*)List_detach(&sem->waiting_descriptors, (ListItem *)sem->waiting_descriptors.first);  //rimuovo il descrittore del processo in attesa dalla waiting_list del semaforo
 
-    if(!ret0) {  //caso in cui la rimozione del puntatore a descrittore, dalla waiting list, fallisce
+    if(!auxPtr) {  //caso in cui la rimozione del puntatore a descrittore, dalla waiting list, fallisce
       printf("[ERROR]: Rimozione del puntatore a descrittore, dalla waiting_list, fallita!\n");
       running->syscall_retvalue = DSOS_ELIST_DETACH;
       return;
     }
 
-    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->descriptors, sem->descriptors.last, (ListItem *) fd_semPtr);  //inserisco il puntatore a descrittore: fd_semPtr nella lista dei descrittori del semaforo
+    SemDescriptorPtr* ret0 = (SemDescriptorPtr*)List_insert(&sem->descriptors, sem->descriptors.last, (ListItem *)auxPtr);  //inserisco il puntatore a descrittore: aux_ptr nella lista dei descrittori del semaforo
 
-    if(!ret1) {  //caso in cui l'inserimento del puntatore a descrittore, nella lista, fallisce
+    if(!ret0) {  //caso in cui l'inserimento del puntatore a descrittore, nella lista, fallisce
       printf("[ERROR]: Inserimento del puntatore a descrittore fallita!\n");
       running->syscall_retvalue = DSOS_ELIST_INSERT;
       return;
     }
 
+    //imposto lo stato del processo corrente
+    PCB* proc = auxPtr->descriptor->pcb;
+    proc->status = Ready;
+
     //sposto il PCB dalla waiting alla ready list
-    PCB* pcb_aux = (PCB*)List_detach(&waiting_list, (ListItem *)running);  //rimuovo il process control block del processo corrente dalla waiting_list
+    PCB* pcb_aux = (PCB*)List_detach(&waiting_list, (ListItem *)proc);  //rimuovo il process control block del processo corrente dalla waiting_list
 
     if(!pcb_aux) {
       printf("[ERROR]: Rimozione del processo, dalla waiting_list, fallita!\n");
       running->syscall_retvalue= DSOS_ELIST_DETACH;
       return;
     }
-    pcb_aux = (PCB*)List_insert(&ready_list, ready_list.last, (ListItem *)running);  //inserisco il process control block del processo corrente nella ready_list
+    pcb_aux = (PCB*)List_insert(&ready_list, ready_list.last, (ListItem *)proc);  //inserisco il process control block del processo corrente nella ready_list
 
     if(!pcb_aux) {
       printf("[ERROR]: Inserimento del processo, nella ready_list, fallita!\n");
       running->return_value = DSOS_ELIST_INSERT;
       return;
     }
-    running = pcb_aux;
   }
 
   running->syscall_retvalue = 0;
