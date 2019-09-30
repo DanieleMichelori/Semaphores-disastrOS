@@ -43,5 +43,24 @@ void internal_semPost(){
       running->syscall_retvalue = DSOS_ELIST_INSERT;
       return;
     }
+
+    //sposto il PCB dalla waiting alla ready list
+    PCB* pcb_aux = (PCB*)List_detach(&waiting_list, (ListItem *)running);  //rimuovo il process control block del processo corrente dalla waiting_list
+
+    if(!pcb_aux) {
+      printf("[ERROR]: Rimozione del processo, dalla waiting_list, fallita!\n");
+      running->syscall_retvalue= DSOS_ELIST_DETACH;
+      return;
+    }
+    pcb_aux = (PCB*)List_insert(&ready_list, ready_list.last, (ListItem *)running);  //inserisco il process control block del processo corrente nella ready_list
+
+    if(!pcb_aux) {
+      printf("[ERROR]: Inserimento del processo, nella ready_list, fallita!\n");
+      running->return_value = DSOS_ELIST_INSERT;
+      return;
+    }
+    running = pcb_aux;
   }
+
+  running->syscall_retvalue = 0;
 }

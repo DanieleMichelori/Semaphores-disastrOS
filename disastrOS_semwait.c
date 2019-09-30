@@ -44,6 +44,7 @@ void internal_semWait(){
       return;
     }
 
+    //sposto il PCB dalla ready alla waiting list
     PCB* pcb_aux = (PCB*)List_detach(&ready_list, (ListItem *)running);  //rimuovo il process control block del processo corrente dalla ready_list
 
     if(!pcb_aux) {

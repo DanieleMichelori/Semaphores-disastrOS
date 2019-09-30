@@ -19,7 +19,8 @@ Viene inoltre rimosso e deallocato il puntatore al descrittore nella lista dei d
 Infine viene decrementato il contatore dei descrittori attivi e, se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
 
 
-3. semWait: 
+3. semWait: necessaria a decrementare il contatore del semaforo associato al descrittore passato. Quando il contatore assume valori negativi, il puntatore a descrittore e il PCB vengono spostati dalla ready alla waiting list e un nuovo processo viene messo in esecuzione. Infine se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
+
 
 4. semPost: 
 
