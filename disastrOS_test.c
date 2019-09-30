@@ -71,12 +71,18 @@ void childFunction(void* args){
   int read_sem = disastrOS_semOpen(READ_ID, 1);
   int write_sem = disastrOS_semOpen(WRITE_ID, 1);
 
-  for (int i=0; i<ITERATION; ++i){
+  for (int i = 0; i<ITERATION; ++i){
     if(disastrOS_getpid()%2==0) {  //Se il pid del figlio è pari allora viene eseguita un'operazione di scrittura nel buffer
       producer_function(filled_sem, empty_sem, read_sem, write_sem);
     }
     //Se il pid del figlio è dispari allora viene eseguita un'operazione di lettura sul buffer
     else consumer_function(filled_sem, empty_sem, read_sem, write_sem);
+
+    int i;
+    for(i = 0; i<BUFFER_LENGTH; i++){
+      printf("%d ", buffer[i]);
+    }
+    printf("\n");
   }
 
   printf("\nCHIUSURA SEMAFORI...\n");

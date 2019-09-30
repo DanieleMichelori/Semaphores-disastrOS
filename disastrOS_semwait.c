@@ -43,14 +43,22 @@ void internal_semWait(){
       running->syscall_retvalue = DSOS_ELIST_INSERT;
       return;
     }
-    PCB* pcb_aux = (PCB*)List_insert(&waiting_list, waiting_list.last, (ListItem *)running);  //inserisco il protocol control block del processo corrente nella waiting_list
+
+    PCB* pcb_aux = (PCB*)List_detach(&ready_list, (ListItem *)running);  //rimuovo il process control block del processo corrente dalla ready_list
+
+    if(!pcb_aux) {
+      printf("[ERROR]: Rimozione del processo, dalla ready_list, fallita!\n");
+      running->syscall_retvalue= DSOS_ELIST_DETACH;
+      return;
+    }
+    pcb_aux = (PCB*)List_insert(&waiting_list, waiting_list.last, (ListItem *)running);  //inserisco il process control block del processo corrente nella waiting_list
 
     if(!pcb_aux) {
       printf("[ERROR]: Inserimento del processo, nella waiting_list, fallita!\n");
       running->return_value = DSOS_ELIST_INSERT;
       return;
     }
-
+    running = pcb_aux;
   }
 
   running->syscall_retvalue = 0;
