@@ -1,7 +1,7 @@
-Semaphores-disastrOS
+*********************************************************Semaphores-disastrOS*********************************************************
+
 - WHAT:
-
-
+Il progetto riguarda l'accesso asincrono dei processi alle risorse disponibili, ciò avviene mediante l'implementazione del modello produttore - consumatore attraverso l'uso di semafori e delle funzioni che ne permettono la corretta esecuzione. Il risultato finale del test consiste nella scrittura ordinata e nella lettura di un buffer circolare avente 50 elementi.
 
 
 - HOW:
@@ -22,8 +22,8 @@ Infine viene decrementato il contatore dei descrittori attivi e, se non ci sono 
 3. semWait: necessaria a decrementare il contatore del semaforo associato al descrittore passato. Quando il contatore assume valori negativi, il puntatore a descrittore e il PCB vengono spostati dalla ready alla waiting list e un nuovo processo viene messo in esecuzione. Infine se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
 
 
-4. semPost: 
-
+4. semPost: necessaria a incrementare il contatore del semaforo associato al descrittore passato. Quando il contatore assume valori non positivi, il puntatore a descrittore e il PCB vengono spostati dalla waiting alla ready list e lo stato di un nuovo processo viene
+impostato a Ready. Infine se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
 
 
 - HOW TO RUN:

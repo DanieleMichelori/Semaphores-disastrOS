@@ -21,7 +21,7 @@ void producer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   disastrOS_semWait(empty_sem);
   disastrOS_semWait(write_sem);
 
-  printf("\n[WRITE] Scrivo nel buffer alla cella %d il valore %d\n\n", cnt, write_index);
+  printf("[WRITE] Scrivo nel buffer alla cella %d il valore %d\n", cnt, write_index);
 	buffer[write_index] = cnt;
 	write_index = (write_index + 1) % BUFFER_LENGTH;
 	cnt++;
@@ -37,7 +37,7 @@ void consumer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   disastrOS_semWait(read_sem);
 
   int x = buffer[read_index];
-  printf("\n[READ] Leggo nel buffer alla cella %d il valore %d\n\n", x, read_index);
+  printf("[READ] Leggo nel buffer alla cella %d il valore %d\n", x, read_index);
 	read_index = (read_index + 1) % BUFFER_LENGTH;
 
   disastrOS_sleep(1);
@@ -64,7 +64,7 @@ void childFunction(void* args){
   printf("fd=%d\n", fd);
   printf("PID: %d, terminating\n", disastrOS_getpid());
 
-  printf("\nAPERTURA SEMAFORI...\n\n");
+  printf("\n-------------Apertura dei semafori-------------\n\n");
   //necessari per il modello produttore - consumatore
   int filled_sem = disastrOS_semOpen(CONSUMER_ID, 0);
   int empty_sem = disastrOS_semOpen(PRODUCER_ID, BUFFER_LENGTH);
@@ -76,14 +76,23 @@ void childFunction(void* args){
       producer_function(filled_sem, empty_sem, read_sem, write_sem);
     }
     //Se il pid del figlio è dispari allora viene eseguita un'operazione di lettura sul buffer
-    else consumer_function(filled_sem, empty_sem, read_sem, write_sem);
+    else {
+      consumer_function(filled_sem, empty_sem, read_sem, write_sem);
+    }
   }
 
-  printf("\nCHIUSURA SEMAFORI...\n");
+  printf("\n-------------Chiusura dei semafori-------------\n");
   disastrOS_semClose(empty_sem);
   disastrOS_semClose(filled_sem);
   disastrOS_semClose(read_sem);
   disastrOS_semClose(write_sem);
+
+  printf("\n----------Stampo il buffer circolare-----------\n\n");
+  int i;
+  for(i = 0; i<BUFFER_LENGTH; i++) {
+    printf("%d ", buffer[i]);
+  }
+  printf("\n\n");
 
   disastrOS_exit(disastrOS_getpid()+1);
 }

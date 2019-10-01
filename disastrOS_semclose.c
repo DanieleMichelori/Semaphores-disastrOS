@@ -21,7 +21,7 @@ void internal_semClose(){
   }
   /*printf("Il file descriptor cercato: %d esiste!\n", fd);*/
 
-  printf("\nChiusura del descrittore %d associato al semaforo %d...\n", fd, fd_sem->semaphore->id);
+  printf("Chiusura del descrittore %d associato al semaforo %d...\n", fd, fd_sem->semaphore->id);
   //ListItem* List_detach(ListHead* head, ListItem* item);
   fd_sem = (SemDescriptor*)List_detach(&running->sem_descriptors, (ListItem *)fd_sem);  //rimuovo il fd dalla lista dei descrittori del processo
 
@@ -42,7 +42,7 @@ void internal_semClose(){
 
   Semaphore* sem = fd_sem->semaphore;  //ottengo il semaforo: sem a partire dal descrittore
 
-  printf("Rimozione del puntatore a descrittore associato al semaforo %d...\n", fd_sem->semaphore->id);
+  printf("Rimozione del puntatore a descrittore associato al semaforo %d...\n", sem->id);
   SemDescriptorPtr* fd_semPtr = (SemDescriptorPtr*)List_detach(&sem->descriptors, (ListItem*)fd_sem->ptr);  //risalgo e rimuovo il puntatore a descrittore: fd_sem->ptr
 
   if(!fd_semPtr) {  //caso in cui la rimozione del puntatore a descrittore, dalla lista, fallisce
@@ -83,5 +83,5 @@ void internal_semClose(){
   }
   else printf("Non rimuovo il semaforo con ID: %d\n", sem->id);  //caso in cui sono presenti descrittori attivi e/o descrittori in attesa -> NON rimuovo il semaforo
 
-  running->syscall_retvalue = 0;  //setto il valore di ritorno
+  running->syscall_retvalue = 0;  //setto il valore di ritorno a 0
 }

@@ -21,7 +21,7 @@ void internal_semWait(){
   }
   Semaphore* sem = fd_sem->semaphore;  //risalgo al semaforo del descrittore: fd_sem
 
-  printf("[WAIT] Il contatore del semaforo con ID: %d passa dal valore %d al valore %d\n", sem->id, sem->count, sem->count-1);
+  printf("[WAIT] Il processo %d ha associato il semaforo ID: %d il cui contatore viene decrementato a %d\n", disastrOS_getpid(), sem->id, sem->count-1);
   sem->count = sem->count - 1;  //decremento contatore Semaphore associato alla Wait
 
   SemDescriptorPtr* fd_semPtr = fd_sem->ptr;  //risalgo al puntatore a descittore
@@ -36,7 +36,7 @@ void internal_semWait(){
       return;
     }
 
-    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *)fd_semPtr);  //inserisco il puntatore a descrittore: fd_semPtr nella lista di waiting del semaforo
+    SemDescriptorPtr* ret1 = (SemDescriptorPtr*)List_insert(&sem->waiting_descriptors, sem->waiting_descriptors.last, (ListItem *)fd_semPtr);  //inserisco il puntatore a descrittore: fd_semPtr nella lista di waiting del semaforo (in coda)
 
     if(!ret1) {  //caso in cui l'inserimento del puntatore a descrittore, nella lista di waiting, fallisce
       printf("[ERROR]: Inserimento del puntatore a descrittore, nella waiting_list, fallita!\n");
@@ -47,7 +47,7 @@ void internal_semWait(){
     running->status = Waiting;  //imposto lo stato del processo corrente
 
     //sposto il PCB dalla ready alla waiting list
-    PCB* pcb_aux = (PCB*)List_insert(&waiting_list, waiting_list.last, (ListItem *)running);  //inserisco il process control block del processo corrente nella waiting_list
+    PCB* pcb_aux = (PCB*)List_insert(&waiting_list, waiting_list.last, (ListItem *)running);  //inserisco il process control block del processo corrente nella waiting_list (in coda)
 
     if(!pcb_aux) {
       printf("[ERROR]: Inserimento del processo, nella waiting_list, fallita!\n");
@@ -55,7 +55,7 @@ void internal_semWait(){
       return;
     }
 
-    pcb_aux = (PCB*)List_detach(&ready_list, (ListItem *)ready_list.first);  //rimuovo il process control block del processo corrente dalla ready_list
+    pcb_aux = (PCB*)List_detach(&ready_list, (ListItem *)ready_list.first);  //rimuovo il process control block del primo processo nella ready_list
 
     if(!pcb_aux) {
       printf("[ERROR]: Rimozione del processo, dalla ready_list, fallita!\n");

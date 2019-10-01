@@ -47,7 +47,7 @@ void internal_semOpen(){
   }
 
   int fd = running->last_sem_fd;  //assegnazione del descrittore all'ultimo semaforo creato
-  printf("Apertura del descrittore %d per il semaforo %d...\n\n", fd, sem_id);
+  printf("Apertura del descrittore %d per il semaforo %d...\n", fd, sem_id);
   //SemDescriptor* SemDescriptor_alloc(int fd, Semaphore* res, PCB* pcb);
   SemDescriptor* fd_sem = (SemDescriptor*)SemDescriptor_alloc(fd, sem_aux, running);  //alloco il descrittore al semaforo appena creato: sem_aux
 
@@ -75,8 +75,8 @@ void internal_semOpen(){
     return;
   }
 
-  fd_sem->ptr = fd_semPtr;  //inserisco il puntatore a descrittore nella Struct del descrittore
-  SemDescriptorPtr* ret2 = (SemDescriptorPtr*)List_insert(&sem_aux->descriptors, sem_aux->descriptors.last, (ListItem *)fd_semPtr);  //aggiungo il puntatore a descittore: fd_semPtr nella lista dei descittori del Semaphore: sem_aux
+  fd_sem->ptr = fd_semPtr;  //associo il puntatore a descrittore: fd_semPtr alla Struct del descrittore: fd_sem come ptr
+  SemDescriptorPtr* ret2 = (SemDescriptorPtr*)List_insert(&sem_aux->descriptors, sem_aux->descriptors.last, (ListItem *)fd_semPtr);  //aggiungo il puntatore a descrittore: fd_semPtr nella lista dei descittori del Semaphore: sem_aux
 
   if(!ret2) {  //caso in cui l'inserimento del puntatore a descittore, nella lista, fallisce
     printf("[ERROR]: Inserimento del puntatore a descrittore in coda fallita!\n");
