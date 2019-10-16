@@ -23,7 +23,7 @@ void internal_semOpen(){
   }
 
   //analizzo il caso in cui il Semaphore esiste
-  if(sem_aux != NULL) printf("Il semaforo con ID: %d è preesistente!\n", sem_id);
+  /*if(sem_aux != NULL) printf("Il semaforo con ID: %d è preesistente!\n", sem_id);*/
 
   if(sem_aux == NULL) {  //analizzo il caso in cui il Semaphore non esiste
     printf("Creazione del semaforo con ID: %d...\n", sem_id);

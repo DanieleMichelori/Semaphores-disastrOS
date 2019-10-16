@@ -21,7 +21,7 @@ void internal_semPost(){
   }
   Semaphore* sem = fd_sem->semaphore;  //risalgo al semaforo del descrittore: fd_sem
 
-  printf("[POST] Il processo %d ha associato il semaforo ID: %d il cui contatore viene incrementato a %d\n", disastrOS_getpid(), sem->id, sem->count+1);
+  printf("[POST] PID: %d, ha semaforo ID: %d, contatore incrementa a %d\n", disastrOS_getpid(), sem->id, sem->count+1);
   sem->count = sem->count + 1;  //decremento contatore Semaphore associato alla Wait
 
   //Sposto il puntatore a descrittore, dalla waiting_list, nella lista di Ready

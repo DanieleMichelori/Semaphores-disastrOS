@@ -21,12 +21,12 @@ void producer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   disastrOS_semWait(empty_sem);
   disastrOS_semWait(write_sem);
 
-  printf("[WRITE] Scrivo nel buffer alla cella %d il valore %d\n", cnt, write_index);
+  printf("[WRITE] PID: %d, Scrivo nel buffer alla cella %d il valore %d\n", disastrOS_getpid(), cnt, write_index);
 	buffer[write_index] = cnt;
 	write_index = (write_index + 1) % BUFFER_LENGTH;
 	cnt++;
 
-  disastrOS_sleep(1);
+  disastrOS_sleep(5);
 
   disastrOS_semPost(write_sem);
   disastrOS_semPost(filled_sem);
@@ -37,10 +37,10 @@ void consumer_function(int filled_sem, int empty_sem, int read_sem, int write_se
   disastrOS_semWait(read_sem);
 
   int x = buffer[read_index];
-  printf("[READ] Leggo nel buffer alla cella %d il valore %d\n", x, read_index);
+  printf("[READ] PID: %d, Leggo nel buffer alla cella %d il valore %d\n", disastrOS_getpid(), x, read_index);
 	read_index = (read_index + 1) % BUFFER_LENGTH;
 
-  disastrOS_sleep(1);
+  disastrOS_sleep(5);
 
   disastrOS_semPost(read_sem);
   disastrOS_semPost(empty_sem);
@@ -72,6 +72,7 @@ void childFunction(void* args){
   int write_sem = disastrOS_semOpen(WRITE_ID, 1);
 
   for (int i = 0; i<ITERATION; ++i){
+    printf("\nPID: %d, iterazione %d\n", disastrOS_getpid(), i+1);
     if(disastrOS_getpid()%2==0) {  //Se il pid del figlio è pari allora viene eseguita un'operazione di scrittura nel buffer
       producer_function(filled_sem, empty_sem, read_sem, write_sem);
     }

@@ -81,7 +81,7 @@ void internal_semClose(){
       return;
     }
   }
-  else printf("Non rimuovo il semaforo con ID: %d\n", sem->id);  //caso in cui sono presenti descrittori attivi e/o descrittori in attesa -> NON rimuovo il semaforo
+  /*else printf("Non rimuovo il semaforo con ID: %d\n", sem->id);*/  //caso in cui sono presenti descrittori attivi e/o descrittori in attesa -> NON rimuovo il semaforo
 
   running->syscall_retvalue = 0;  //setto il valore di ritorno a 0
 }

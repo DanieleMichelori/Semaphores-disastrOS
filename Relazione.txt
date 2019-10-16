@@ -1,4 +1,4 @@
-*********************************************************Semaphores-disastrOS*********************************************************
+***********************************Semaphores-disastrOS***********************************
 
 - WHAT:
 Il progetto riguarda l'accesso asincrono dei processi alle risorse disponibili, ciò avviene mediante l'implementazione del modello produttore - consumatore attraverso l'uso di semafori e delle funzioni che ne permettono la corretta esecuzione. Il risultato finale del test consiste nella scrittura ordinata e nella lettura di un buffer circolare avente 50 elementi.
