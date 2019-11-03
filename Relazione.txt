@@ -8,9 +8,8 @@ Il progetto riguarda l'accesso asincrono dei processi alle risorse disponibili, 
 Le quattro systemcall sotto descritte gestiscono il funzionamento dei semafori:
 
 1. semOpen: necessaria alla creazione di un semaforo identificato da un id e un contatore, denominati rispettivamente 'sem_id' e 'sem_count'.
-Nel caso in cui il semaforo fosse già presente nella lista dei semafori allora avviene la semplice apertura di un nuovo descrittore, questo verrà inserito come entry della lista dei descrittori del processo corrente; altrimenti viene effettuata l'allocazione e l'aggiunta del semaforo alla lista dei semafori.
-Viene inoltre creato un puntatore al file descrittore e viene incrementato il contatore dei descrittori attivi del processo in
-esecuzione.
+Nel caso in cui il semaforo fosse già presente nella lista dei semafori allora avviene la semplice apertura di un nuovo descrittore altrimenti viene effettuata l'allocazione e l'aggiunta del semaforo alla lista dei semafori.
+Viene inoltre creato un puntatore al file descrittore e viene incrementato il contatore dei descrittori attivi del processo in esecuzione.
 Infine se non ci sono stati errori viene impostato come valore di ritorno il file descriptor del semaforo appena aperto (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
 
 
@@ -22,8 +21,7 @@ Infine viene decrementato il contatore dei descrittori attivi e, se non ci sono 
 3. semWait: necessaria a decrementare il contatore del semaforo associato al descrittore passato. Quando il contatore assume valori negativi, il puntatore a descrittore e il PCB vengono spostati dalla ready alla waiting list e un nuovo processo viene messo in esecuzione. Infine se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
 
 
-4. semPost: necessaria a incrementare il contatore del semaforo associato al descrittore passato. Quando il contatore assume valori non positivi, il puntatore a descrittore e il PCB vengono spostati dalla waiting alla ready list e lo stato di un nuovo processo viene
-impostato a Ready. Infine se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
+4. semPost: necessaria a incrementare il contatore del semaforo associato al descrittore passato. Se il contatore, a seguito dell'incremento, possiede valore non positivo, il puntatore a descrittore e il PCB vengono spostati dalla waiting alla ready list e lo stato di un nuovo processo viene impostato a Ready. Infine se non ci sono stati errori, viene impostato come valore di ritorno 0 (altrimenti il valore di ritorno dipende dal tipo di errore stampato).
 
 
 - HOW TO RUN:

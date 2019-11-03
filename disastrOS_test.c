@@ -15,7 +15,7 @@
 int buffer[BUFFER_LENGTH];
 int write_index = 0;
 int read_index = 0;
-int cnt = 0;
+int cnt = 1;
 
 void producer_function(int filled_sem, int empty_sem, int read_sem, int write_sem) { //enqueue
   disastrOS_semWait(empty_sem);
@@ -73,10 +73,10 @@ void childFunction(void* args){
 
   for (int i = 0; i<ITERATION; ++i){
     printf("\nPID: %d, iterazione %d\n", disastrOS_getpid(), i+1);
-    if(disastrOS_getpid()%2==0) {  //Se il pid del figlio è pari allora viene eseguita un'operazione di scrittura nel buffer
+    if(disastrOS_getpid()%2==0) {  //Se il pid è pari allora viene eseguita un'operazione di scrittura nel buffer
       producer_function(filled_sem, empty_sem, read_sem, write_sem);
     }
-    //Se il pid del figlio è dispari allora viene eseguita un'operazione di lettura sul buffer
+    //Se il pid è dispari allora viene eseguita un'operazione di lettura sul buffer
     else {
       consumer_function(filled_sem, empty_sem, read_sem, write_sem);
     }
