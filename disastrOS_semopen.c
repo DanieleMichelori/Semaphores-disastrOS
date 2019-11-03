@@ -11,7 +11,7 @@
 void internal_semOpen(){
   // do stuff :)
   int sem_id = running->syscall_args[0];  //assegnazione ID del Semaphore
-  int sem_count = 1;  //assegnazione contatore del Semaphore
+  int sem_count = running->syscall_args[1];  //assegnazione contatore del Semaphore
 
   //Semaphore* SemaphoreList_byId(SemaphoreList* l, int id);
   Semaphore* sem_aux = (Semaphore*)SemaphoreList_byId(&semaphores_list, sem_id);  //controllo se il Semaphore con id: sem_id è nella global list of semaphores: semaphores_list, ovvero se è preesistente
